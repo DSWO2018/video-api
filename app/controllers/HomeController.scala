@@ -19,7 +19,16 @@ class HomeController @Inject()(cc: ControllerComponents)
    * a path of `/`.
    */
   def index = Action {
-      Ok(Json.obj("status" ->"OK", "message" -> "Hello world!"))
+      Ok(Json.obj("status" ->"OK", "message" -> "Hello world"))
   }
 
+  /**
+    * Create an Action to render an JSON message.
+    * The configuration in the `routes` file means that this method
+    * will be called when the application receives a `POST` request with
+    * a path of `/who`.
+    */
+  def who: Action[JsValue] = Action(parse.json) { request: Request[JsValue]  =>
+    Ok("Got: " + (request.body \ "name").as[String])
+  }
 }
