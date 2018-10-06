@@ -14,4 +14,5 @@ libraryDependencies += guice
 libraryDependencies += jdbc
 
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+libraryDependencies += "org.mariadb.jdbc" % "mariadb-java-client" % "2.3.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.0"
