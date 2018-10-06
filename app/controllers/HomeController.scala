@@ -19,7 +19,7 @@ class HomeController @Inject()(cc: ControllerComponents)
    * a path of `/`.
    */
   def index = Action {
-      Ok(Json.obj("status" ->"OK", "message" -> "Hello world"))
+      Ok(Json.obj("status" ->"OK", "message" -> "Hello world."))
   }
 
   /**
