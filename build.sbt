@@ -19,3 +19,4 @@ libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.0"
 
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 libraryDependencies += specs2 % Test
+libraryDependencies += "com.h2database" % "h2" % "1.4.197" % Test
