@@ -10,9 +10,13 @@ scalaVersion := "2.12.6"
 
 crossScalaVersions := Seq("2.11.12", "2.12.6")
 
-libraryDependencies += guice
+libraryDependencies += "com.google.inject" % "guice" % "4.2.1"
+
 libraryDependencies += jdbc
 
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 libraryDependencies += "org.mariadb.jdbc" % "mariadb-java-client" % "2.3.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.0"
+
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+libraryDependencies += specs2 % Test
+libraryDependencies += "com.h2database" % "h2" % "1.4.197" % Test

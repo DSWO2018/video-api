@@ -4,5 +4,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-
 POST    /who                        controllers.HomeController.who
+
+# User routes
+POST    /user                       controllers.UserController.addUser
