@@ -1,7 +1,5 @@
 language: scala
 scala:
-# When updating Scala versions, also check the excludes
-# in build matrix below.
 - 2.11.12
 - 2.12.6
 jdk:
@@ -9,33 +7,36 @@ jdk:
 - oraclejdk9
 - oraclejdk10
 - oraclejdk11
+services:
+- docker
 env:
   matrix:
-    - SCRIPT=scripts/test-sbt
+  - SCRIPT=scripts/test-sbt
 script:
-- $SCRIPT
-
-# Exclude some combinations from build matrix. See:
-# https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix
+- "$SCRIPT"
 matrix:
   exclude:
-    - scala: 2.11.12
-      jdk: oraclejdk9
-    - scala: 2.11.12
-      jdk: oraclejdk10
-    - scala: 2.11.12
-      jdk: oraclejdk11
+  - scala: 2.11.12
+    jdk: oraclejdk9
+  - scala: 2.11.12
+    jdk: oraclejdk10
+  - scala: 2.11.12
+    jdk: oraclejdk11
   allow_failures:
-    # We should allow failures here since Java 11 removed some modules including
-    # java.xml.bind which we are adding when running with Java 9+. For more details
-    # see http://openjdk.java.net/jeps/320
-    #
-    # Play already has a fix for that, but it needs to be backported and released
-    # for 2.6.x: https://github.com/playframework/playframework/pull/8382
-    - jdk: oraclejdk11
+  - jdk: oraclejdk11
 
-# See https://blog.travis-ci.com/2014-03-13-slack-notifications/
-# created with travis encrypt command line tool
-# notifications:
-#  slack:
-#    secure: b3HmryX99vIX8IseNi74kvayX3Q+dp3h2qG2MSRpxT32FldTW012yuX30OVOdd0hiTkAKKTTmMVejpjH/0hkoe5qWCVFzqIBkAyW3yDaFUP7+MiE7A/rqsKqmSHe9mDO1jv4bnZYz3nLu85tKgb2VM23tD6s4Cbg+Mj6zV8wv0OTubg6kEaiLwCekiUa3hNbW00BKEO9s+Z3xc38GWrlE940gFwXNO+eydLCUkYX5KqwNElUj4e17UHZPNTSHCCrmcX3fIPymBAC0O5CP1N0M6PEwPVoK7RfJGF2z3wPY27GeM9/WLgNdyN3BNRht9SkNJFlT4vZYq2CGH1tpNP9DTkMj2ZgP1B02h39ovGk+iTfWF6s58dsHohbNof85CT8uEINfwok9x7C/JAKQMlj82+2Kn9PKSD2fWv3wS8raEoLUqlFrEGcjikRAdBw7G3WDnGugKLwbHQEbkG9TBEEegkLtc0oU1T90fUIx0U4OA8Qg8eJv/s0Sy32o9B+d1PJLFO5iATPmX8jwmzJxf1drbM0v0Gd/EuhJwlZGVksJnUoqhG3IGVN5ojOQw5HpTXAKr78dE0nfa6H9uDphwE4hH882tLmfpMIbeUergxurCupj3XUumOKADAzr/qIEzQBRxEeVvRjZ7IuGhxz8KPHgfV1tFIu2CURBiOq+JWj7/E=
+before_deploy:
+- sbt docker:stage
+- cd $TRAVIS_BUILD_DIR/target/docker/stage
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: AKIAI4SSSVEQ5UFMWBZQ
+  secret_access_key:
+    secure: aa7selN4tVKgTRWEBZk+5JEnd+9yf+fu2L16IXfHa0J2kQhTcZuxPtIq4UUmb4ORiq9j8pyeEloTUcNrSSrRwMEZT+3JwytL0W59eEnqqp8FTOjz1ZQPpxqzX8rwTa7GEj0L8qQMqdTgOZVjKRXx4FEOpHmPk3A2biywmOT58ZK1amM3HdRZFrS1P9EW3tpJOAYztpWHL8VbgMzLpwWHbVBsxz3qUCj97Z6U1y2G0mur2ByL2h0Ek6hrm9mElft1K53koswqqquGPdPNAkSyFVzaP/1I/w7j3icckVvMq2VYgq4Qon7D87dtskcDUhrJs+YtMIAuqdURZPEN7dSBwhyC0lJAun7Y7WX9XeSIT0N6l2lY5J4+Hp7bLymh7E/F88lvFGpWH1HR8+WpnwJYy718SRBMDjU4GhsVS07tjZ8gwG5gOajPDhOl1CfxdGyk0yARG8sqdCNpezGPu2cTQkK5ZGH/Br5c/c1gX0XtMhaMWYmMrstOqP5pinQhYE1wOgukYOAseRD5MLSsAMwnXBIsMGd5AFqadCoPIIBgXGf0Iy4cK95a0RkxiTcm9+0KwtgGY4LSuMWr8x4izCwWhUXnJVSYyH4nLOqMIlZ2GSdAefR3aLhG5XrKQRtSdx19jvGvKAtAdjkFIw7/dP7496/WRv2q8Foi4yspnl1abQk=
+  region: us-east-1
+  app: VideoAPI
+  env: api-env
+  on:
+    repo: DSWO2018/video-api
+    branch: feature/BE33-docker-deploy
