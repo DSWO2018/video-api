@@ -30,6 +30,7 @@ before_deploy:
 - cd $TRAVIS_BUILD_DIR/target/docker/stage
 
 deploy:
+  skip_cleanup: true
   provider: elasticbeanstalk
   access_key_id: AKIAI4SSSVEQ5UFMWBZQ
   secret_access_key:
