@@ -15,6 +15,7 @@ before_deploy:
 - sbt docker:stage
 - mv $TRAVIS_BUILD_DIR/Dockerrun.aws.json $TRAVIS_BUILD_DIR/target/docker/stage/Dockerrun.aws.json
 - cd $TRAVIS_BUILD_DIR/target/docker/stage
+- zip -r video_api.$TRAVIS_COMMIT.zip *
 
 deploy:
   skip_cleanup: true
@@ -25,6 +26,7 @@ deploy:
   region: us-east-1
   app: VideoAPI
   env: api-env
+  zip_file: video_api.$TRAVIS_COMMIT.zip
   bucket_name: video-docker
   on:
     repo: DSWO2018/video-api
