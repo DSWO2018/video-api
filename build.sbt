@@ -4,7 +4,11 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += Resolver.sonatypeRepo("releases")
+packageName in Docker := "video_api"
+dockerExposedPorts := Seq(9001)
+dockerBaseImage := "openjdk:8-jdk-slim"
+
 
 scalaVersion := "2.12.6"
 
