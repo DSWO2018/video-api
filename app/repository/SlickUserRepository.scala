@@ -6,6 +6,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
 class SlickUserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
@@ -16,12 +17,22 @@ class SlickUserRepository @Inject()(protected val dbConfigProvider: DatabaseConf
 
   private val Users = TableQuery[UsersTable]
 
-  def addUser(anyUser: User): Future[User] = {
-    db.run {
-      (Users returning Users.map(_.id)
-        into ((user,id) => user.copy(id=Some(id)))
-        ) += User(None, anyUser.email, anyUser.password)
-    }
+  def add(anyUser: User): Future[Try[User]] = {
+    db.run(((Users returning Users.map(_.id)
+      into ((user,id) => user.copy(id=Some(id)))
+      ) += User(None, anyUser.email, anyUser.password)).asTry)
+  }
+
+  def get(id: Int): Future[Option[User]] = {
+    db.run(Users.filter(_.id === id).result.headOption)
+  }
+
+  def get(mail: String): Future[Option[User]] = {
+    db.run(Users.filter(_.email === mail).result.headOption)
+  }
+
+  def list(): Future[Seq[User]] = db.run {
+    Users.result
   }
 
   class UsersTable(tag: Tag) extends Table[User](tag, "users") {

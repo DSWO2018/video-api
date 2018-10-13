@@ -8,6 +8,7 @@ import repository.SlickUserRepository
 import services.UserService
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 @Singleton
 class UserController @Inject()(userRepo: SlickUserRepository, cc: ControllerComponents)(implicit ec: ExecutionContext)
@@ -18,12 +19,13 @@ class UserController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
   def addUser(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
     val placeResult = request.body.validate[User]
     placeResult.fold(
-      errors => {
-        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> JsError.toJson(errors))))
+      _ => {
+        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> "Wrong email or password size.")))
       },
       user => {
-        service.addUser(user).map { anyUser =>
-          Ok(Json.toJson(anyUser))
+        service.add(user.email, user.password).map{
+          case Success(response) => Ok(Json.toJson(response))
+          case Failure(t)        => BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> "Email already registered."))
         }
       }
     )

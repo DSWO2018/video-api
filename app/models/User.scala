@@ -5,6 +5,7 @@ import play.api.libs.json.Reads.{email, minLength}
 import play.api.libs.functional.syntax._
 
 import scala.concurrent.Future
+import scala.util.Try
 
 case class User(id: Option[Int], email: String, password: String)
 
@@ -23,5 +24,8 @@ object User {
 }
 
 trait UserRepository {
-  def addUser(anyUser: User): Future[User]
+  def add(anyUser: User): Future[Try[User]]
+  def get(id: Int): Future[Option[User]]
+  def get(mail: String): Future[Option[User]]
+  def list(): Future[Seq[User]]
 }
