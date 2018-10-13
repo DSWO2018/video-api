@@ -1,7 +1,5 @@
 package repository
 
-import java.sql.{SQLException, SQLIntegrityConstraintViolationException}
-
 import javax.inject.{Inject, Singleton}
 import models.{User, UserRepository}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}

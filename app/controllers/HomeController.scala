@@ -44,11 +44,13 @@ class HomeController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
         Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> JsError.toJson(errors))))
       },
       user => {
-        if(service.isAuthenticated(user)) {
-          Future(Ok(Json.obj("status" ->OK, "message" -> "Authorized")).withSession(
-            "user" -> user.email))
-        } else {
-          Future(Unauthorized(Json.obj("status" ->UNAUTHORIZED, "message" -> "Bad login")))
+        service.isAuthenticated(user.email, user.password).map { auth =>
+          if(auth) {
+            Ok(Json.obj("status" ->OK, "message" -> "Authorized")).withSession(
+              "user" -> user.email)
+          } else {
+            Unauthorized(Json.obj("status" ->UNAUTHORIZED, "message" -> "Bad login"))
+          }
         }
       }
     )
