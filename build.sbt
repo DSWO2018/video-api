@@ -14,8 +14,7 @@ scalaVersion := "2.12.6"
 
 crossScalaVersions := Seq("2.11.12", "2.12.6")
 
-libraryDependencies += "com.google.inject" % "guice" % "4.2.1"
-
+libraryDependencies += guice
 libraryDependencies += jdbc
 
 libraryDependencies += "org.mariadb.jdbc" % "mariadb-java-client" % "2.3.0"
