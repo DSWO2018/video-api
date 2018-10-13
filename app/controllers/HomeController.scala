@@ -1,16 +1,23 @@
 package controllers
 
 import javax.inject._
+import models.User
 import play.api.mvc._
 import play.api.libs.json._
+import repository.SlickUserRepository
+import services.UserService
+
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents)
+class HomeController @Inject()(userRepo: SlickUserRepository, cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
+
+  val service = new UserService(userRepo)
 
   /**
    * Create an Action to render an HTML page with a welcome message.
@@ -22,13 +29,28 @@ class HomeController @Inject()(cc: ControllerComponents)
       Ok(Json.obj("status" ->"OK", "message" -> "Hello world."))
   }
 
-  /**
-    * Create an Action to render an JSON message.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `POST` request with
-    * a path of `/who`.
-    */
-  def who: Action[JsValue] = Action(parse.json) { request: Request[JsValue]  =>
-    Ok("Got: " + (request.body \ "name").as[String])
+  def who = Action { request =>
+    request.session.get("user").map { user =>
+      Ok(Json.obj("status" ->OK, "message" -> user))
+    }.getOrElse {
+      Unauthorized(Json.obj("status" ->OK, "message" -> "Unauthorized"))
+    }
+  }
+
+  def login(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
+    val placeResult = request.body.validate[User]
+    placeResult.fold(
+      errors => {
+        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> JsError.toJson(errors))))
+      },
+      user => {
+        if(service.isAuthenticated(user)) {
+          Future(Ok(Json.obj("status" ->OK, "message" -> "Authorized")).withSession(
+            "user" -> user.email))
+        } else {
+          Future(Unauthorized(Json.obj("status" ->UNAUTHORIZED, "message" -> "Bad login")))
+        }
+      }
+    )
   }
 }

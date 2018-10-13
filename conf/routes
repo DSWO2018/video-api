@@ -2,9 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
+# App controller
 GET     /                           controllers.HomeController.index
-POST    /who                        controllers.HomeController.who
+POST    /login                      controllers.HomeController.login
+GET     /who                        controllers.HomeController.who
 
 # User routes
 POST    /user                       controllers.UserController.addUser
