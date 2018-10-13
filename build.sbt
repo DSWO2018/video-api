@@ -4,14 +4,17 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += Resolver.sonatypeRepo("releases")
+packageName in Docker := "video_api"
+dockerExposedPorts := Seq(9000)
+dockerBaseImage := "openjdk:8-jdk-slim"
+
 
 scalaVersion := "2.12.6"
 
 crossScalaVersions := Seq("2.11.12", "2.12.6")
 
-libraryDependencies += "com.google.inject" % "guice" % "4.2.1"
-
+libraryDependencies += guice
 libraryDependencies += jdbc
 
 libraryDependencies += "org.mariadb.jdbc" % "mariadb-java-client" % "2.3.0"
