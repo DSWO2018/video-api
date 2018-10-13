@@ -6,7 +6,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 resolvers += Resolver.sonatypeRepo("releases")
 packageName in Docker := "video_api"
-dockerExposedPorts := Seq(9001)
+dockerExposedPorts := Seq(9000)
 dockerBaseImage := "openjdk:8-jdk-slim"
 
 

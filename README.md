@@ -1,8 +1,8 @@
 # video-api
 
-[<img src="https://img.shields.io/travis/playframework/play-scala-starter-example.svg"/>](https://travis-ci.org/playframework/play-scala-starter-example)
+[![Build Status](https://travis-ci.org/DSWO2018/video-api.svg?branch=master)](https://travis-ci.org/DSWO2018/video-api)
 
-This is a starter application that shows how Play works.  Please see the documentation at <https://www.playframework.com/documentation/latest/Home> for more details.
+This is the video-api backend based on Play Framework.  Please see the documentation at <https://www.playframework.com/documentation/latest/Home> for more details.
 
 ## Running
 
@@ -12,7 +12,7 @@ Run this using [sbt](http://www.scala-sbt.org/).  If you downloaded this project
 sbt run
 ```
 
-And then go to <http://localhost:9000> to see the running web application.
+And then go to <http://localhost:9001> to see the running web application.
 
 There are several demonstration files available in this template.
 
