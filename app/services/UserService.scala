@@ -1,7 +1,5 @@
 package services
 
-import java.sql.{SQLException, SQLIntegrityConstraintViolationException}
-
 import models.{User, UserRepository}
 import org.mindrot.jbcrypt.BCrypt
 
