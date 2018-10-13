@@ -30,4 +30,4 @@ deploy:
   bucket_name: video-docker
   on:
     repo: DSWO2018/video-api
-    branch: feature/BE33-docker-deploy
+    branch: master
