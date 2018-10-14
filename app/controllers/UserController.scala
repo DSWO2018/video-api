@@ -39,4 +39,14 @@ class UserController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
       else NotFound(Json.obj("status" ->NOT_FOUND, "response" -> "User not found"))
     }
   }
+
+  def updatePassword(id: Integer): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    val password = (request.body \ "old_password").as[String]
+    val newPassword = (request.body \ "new_password").as[String]
+
+    service.updatePassword(id, password, newPassword).map{ response =>
+      if(response > 0) Ok(Json.obj("status" ->OK, "response" -> "Updated."))
+      else BadRequest(Json.obj("status" ->BAD_REQUEST, "response" -> "Bad request."))
+    }
+  }
 }

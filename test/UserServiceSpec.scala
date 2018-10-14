@@ -55,4 +55,29 @@ class UserServiceSpec extends AsyncFunSuite with Matchers with MockitoSugar {
       user shouldBe 0
     }
   }
+
+  test("update password") {
+    when(userRepository.get(1))
+      .thenReturn(Future(Some(user)))
+
+    when(userRepository.get(0))
+      .thenReturn(Future(None))
+
+    when(userRepository.update(any()))
+      .thenReturn(Future(1))
+
+    val userService = new UserService(userRepository)
+
+    userService.updatePassword(1, "UltraSecretPassword", "NewSecretPassword").map {user =>
+      user shouldBe 1
+    }
+
+    userService.updatePassword(1, "askbdnahjsbda", "NewSecretPassword").map {user =>
+      user shouldBe 0
+    }
+
+    userService.updatePassword(0, "UltraSecretPassword", "NewSecretPassword").map {user =>
+      user shouldBe 0
+    }
+  }
 }

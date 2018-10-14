@@ -34,6 +34,19 @@ class UserService(userRepository: UserRepository)(implicit ec: ExecutionContext)
     }
   }
 
+  def updatePassword(id: Integer, password: String, newPassword: String): Future[Int] = {
+    val oldUser = userRepository.get(id)
+    oldUser.flatMap { usr =>
+      if(!usr.isEmpty && checkHash(password, usr.get.password)) {
+        val hashedPassword = getHash(newPassword)
+        userRepository.update(new User(usr.get.id, usr.get.email, hashedPassword,
+          usr.get.first_name, usr.get.last_name, usr.get.description))
+      } else {
+        Future(0)
+      }
+    }
+  }
+
   def getHash(str: String) : String = {
     BCrypt.hashpw(str, BCrypt.gensalt())
   }
