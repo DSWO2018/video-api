@@ -10,8 +10,8 @@ import scala.util.Success
 
 class UserServiceSpec extends AsyncFunSuite with Matchers with MockitoSugar {
   val userRepository = mock[UserRepository]
-  val user = new User(Option(1), "is700845@iteso.mx", "$2a$10$u4CWJ75wJcQfrr7QPOhXSOue9/ALtPH0Cyvld7slfNVjK71A.XqtO")
-
+  val user = new User(Option(1), "is700845@iteso.mx", "$2a$10$u4CWJ75wJcQfrr7QPOhXSOue9/ALtPH0Cyvld7slfNVjK71A.XqtO",
+  null, null, null)
 
   test("return a user when we push a new user") {
       when(userRepository.add(any()))
@@ -34,5 +34,25 @@ class UserServiceSpec extends AsyncFunSuite with Matchers with MockitoSugar {
 
     userService.isAuthenticated("is700845@iteso.mx", "badPassword").map(f => f shouldBe false)
     userService.isAuthenticated("is700845@iteso.mx", "UltraSecretPassword").map(f => f shouldBe true)
+  }
+
+  test("update description") {
+    when(userRepository.get(1))
+      .thenReturn(Future(Some(user)))
+
+    when(userRepository.get(0))
+      .thenReturn(Future(None))
+
+    when(userRepository.update(any()))
+      .thenReturn(Future(1))
+
+    val userService = new UserService(userRepository)
+
+    userService.updateDescription(1, "New description").map {user =>
+      user shouldBe 1
+    }
+    userService.updateDescription(0, "New description").map {user =>
+      user shouldBe 0
+    }
   }
 }
