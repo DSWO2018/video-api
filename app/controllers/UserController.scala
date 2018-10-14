@@ -20,14 +20,23 @@ class UserController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
     val placeResult = request.body.validate[User]
     placeResult.fold(
       _ => {
-        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> "Wrong email or password size.")))
+        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "response" -> "Wrong email or password size.")))
       },
       user => {
         service.add(user.email, user.password).map{
-          case Success(response) => Ok(Json.toJson(response))
-          case Failure(t)        => BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> "Email already registered."))
+          case Success(response) => Ok(Json.obj("status" ->OK, "response" -> Json.toJson(response)))
+          case Failure(t)        => BadRequest(Json.obj("status" ->BAD_REQUEST, "response" -> "Email already registered."))
         }
       }
     )
+  }
+
+  def updateDescription(id: Integer): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
+    val description = (request.body \ "description").as[String]
+
+    service.updateDescription(id, description).map{ response =>
+      if(response > 0) Ok(Json.obj("status" ->OK, "response" -> "Updated."))
+      else NotFound(Json.obj("status" ->NOT_FOUND, "response" -> "User not found"))
+    }
   }
 }

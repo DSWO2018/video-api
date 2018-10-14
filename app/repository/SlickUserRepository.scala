@@ -20,7 +20,12 @@ class SlickUserRepository @Inject()(protected val dbConfigProvider: DatabaseConf
   def add(anyUser: User): Future[Try[User]] = {
     db.run(((Users returning Users.map(_.id)
       into ((user,id) => user.copy(id=Some(id)))
-      ) += User(None, anyUser.email, anyUser.password)).asTry)
+      ) += User(None, anyUser.email, anyUser.password, anyUser.first_name, anyUser.last_name, anyUser.description)).asTry)
+  }
+
+
+  def update(anyUser: User): Future[Int] = {
+    db.run(Users.filter(_.id === anyUser.id).update(anyUser))
   }
 
   def get(id: Int): Future[Option[User]] = {
@@ -40,7 +45,11 @@ class SlickUserRepository @Inject()(protected val dbConfigProvider: DatabaseConf
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def email = column[String]("email", O.Unique)
     def password = column[String]("password")
+    def first_name = column[String]("first_name")
+    def last_name = column[String]("last_name")
+    def description = column[String]("description")
 
-    def * = (id.?, email, password) <> ((User.apply _).tupled, User.unapply)
+    def * = (id.?, email, password,
+      first_name, last_name, description) <> ((User.apply _).tupled, User.unapply)
   }
 }

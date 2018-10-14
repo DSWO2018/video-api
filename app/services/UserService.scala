@@ -3,15 +3,14 @@ package services
 import models.{User, UserRepository}
 import org.mindrot.jbcrypt.BCrypt
 
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.concurrent.duration.Duration
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class UserService(userRepository: UserRepository)(implicit ec: ExecutionContext) {
 
   def add(email: String, password: String): Future[Try[User]] = {
     val hashedPassword = getHash(password)
-    val anyUser = new User(Some(0), email, hashedPassword)
+    val anyUser = new User(Some(0), email, hashedPassword, null, null, null)
     userRepository.add(anyUser)
   }
 
@@ -19,6 +18,19 @@ class UserService(userRepository: UserRepository)(implicit ec: ExecutionContext)
     val result = userRepository.get(email)
     result.map { usr =>
       checkHash(password, usr.get.password)
+    }
+  }
+
+  def updateDescription(id: Integer, description: String): Future[Int] = {
+    val oldUser = userRepository.get(id)
+    oldUser.flatMap { usr =>
+      if (!usr.isEmpty) {
+        userRepository.update(new User(usr.get.id, usr.get.email, usr.get.password,
+          usr.get.first_name, usr.get.last_name, description))
+
+      } else {
+        Future(0)
+      }
     }
   }
 
