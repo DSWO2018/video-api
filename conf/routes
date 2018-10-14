@@ -10,3 +10,4 @@ GET     /who                        controllers.HomeController.who
 # User routes
 POST    /user                       controllers.UserController.addUser
 PATCH   /user/:id/description       controllers.UserController.updateDescription(id: Integer)
+PATCH   /user/:id/password          controllers.UserController.updatePassword(id: Integer)
