@@ -18,5 +18,7 @@ GET     /courses/:courseId          controllers.CourseController.getCourse(cours
 
 #Lessons
 GET     /lessons/courses/:courseId  controllers.LessonController.getLessons(courseId: Int)
+GET     /lessons/:lessonId          controllers.LessonController.getLesson(lessonId: Int)
+
 # University
 GET     /universities               controllers.UniController.list

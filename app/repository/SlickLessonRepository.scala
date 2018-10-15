@@ -20,7 +20,11 @@ class SlickLessonRepository @Inject()(protected val dbConfigProvider: DatabaseCo
       lessons.filter(_.course_id === courseId).result
     }
   }
-
+  def getLesson(lessonId: Int): Future[Seq[Lesson]] = {
+    db.run {
+      lessons.filter(_.id === lessonId).result
+    }
+  }
   class LessonsTable(tag: Tag) extends Table[Lesson](tag, "lessons"){
     def id = column[Int]("id", O.AutoInc, O.PrimaryKey)
     def title = column[String]("title")
