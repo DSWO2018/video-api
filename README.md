@@ -4,6 +4,9 @@
 
 This is the video-api backend based on Play Framework.  Please see the documentation at <https://www.playframework.com/documentation/latest/Home> for more details.
 
+## API DOC 
+Please see the API doc at <https://documenter.getpostman.com/view/5295564/RWgrxHCt>.
+
 ## Running
 
 Run this using [sbt](http://www.scala-sbt.org/).  If you downloaded this project from <http://www.playframework.com/download> then you'll find a prepackaged version of sbt in the project directory:
