@@ -11,6 +11,14 @@ import scala.concurrent.{ExecutionContext}
 class LessonController @Inject()(lessonRepo: SlickLessonRepository, cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
   var service = new LessonService(lessonRepo)
+  def getLesson (lessonId: Int) = Action.async{
+    service.getLesson(lessonId).map(lesson =>
+      if(lesson.length>0){
+        Ok(Json.obj("status" -> OK, "response" ->Json.toJson(lesson(0))))
+      }else{
+        NotFound(Json.obj("status" -> NOT_FOUND, "response" -> "No existe ninguna lección con el ID solicitado"))
+      })
+  }
   def getLessons(courseId: Int) = Action.async{
     service.getLessons(courseId).map(lessons =>
       if(lessons.length>0){
