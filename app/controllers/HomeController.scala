@@ -38,21 +38,16 @@ class HomeController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
   }
 
   def login(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
-    val placeResult = request.body.validate[User]
-    placeResult.fold(
-      errors => {
-        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "response" -> JsError.toJson(errors))))
-      },
-      user => {
-        service.isAuthenticated(user.email, user.password).map { auth =>
-          if(auth) {
-            Ok(Json.obj("status" ->OK, "response" -> "Authorized")).withSession(
-              "user" -> user.email)
-          } else {
-            Unauthorized(Json.obj("status" ->UNAUTHORIZED, "response" -> "Bad login"))
-          }
-        }
+    val email = (request.body \ "email").as[String]
+    val password = (request.body \ "password").as[String]
+
+    service.isAuthenticated(email, password).map { auth =>
+      if(auth) {
+        Ok(Json.obj("status" ->OK, "response" -> "Authorized")).withSession(
+          "user" -> email)
+      } else {
+        Unauthorized(Json.obj("status" ->UNAUTHORIZED, "response" -> "Bad login"))
       }
-    )
+    }
   }
 }
