@@ -1,5 +1,3 @@
-import java.util.concurrent.CompletableFuture
-
 import models.{Course, CourseRepository}
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
