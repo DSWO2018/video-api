@@ -30,7 +30,7 @@ class SkillTreeController @Inject()(skRepo: SlickSkillTreeRepository, cc: Contro
     )
   }
 
-  def update(id: Int): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
+  def update(id: Integer): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue]  =>
     val placeResult = request.body.validate[SkillTree]
     placeResult.fold(
       _ => {
@@ -39,7 +39,7 @@ class SkillTreeController @Inject()(skRepo: SlickSkillTreeRepository, cc: Contro
       skill => {
         service.update(id, skill).map{ response =>
           if(response > 0) Ok(Json.obj("status" ->OK, "response" -> "Updated."))
-          else NotFound(Json.obj("status" ->NOT_FOUND, "response" -> "User not found"))
+          else NotFound(Json.obj("status" ->NOT_FOUND, "response" -> "Skill not found"))
         }
       }
     )

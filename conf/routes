@@ -25,4 +25,4 @@ GET     /universities               controllers.UniController.list
 
 # Skill tree
 POST    /skill/tree                 controllers.SkillTreeController.add
-PATCH   /skill/tree/:id             controllers.SkillTreeController.update(id: Int)
+PATCH   /skill/tree/:id             controllers.SkillTreeController.update(id: Integer)
