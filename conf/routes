@@ -16,5 +16,7 @@ PATCH   /user/:id/password          controllers.UserController.updatePassword(id
 GET     /courses                    controllers.CourseController.getCourses()
 GET     /courses/:courseId          controllers.CourseController.getCourse(courseId: Int)
 
+#Lessons
+GET     /lessons/courses/:courseId  controllers.LessonController.getLessons(courseId: Int)
 # University
 GET     /universities               controllers.UniController.list
