@@ -19,4 +19,12 @@ class CourseController @Inject()(curseRepo: SlickCourseRepository, cc: Controlle
         NotFound(Json.obj("status" -> NOT_FOUND, "response" -> "No existen cursos"))
       })
   }
+  def getCourse (courseId: Int) = Action.async{
+    service.getCourse(courseId).map(course =>
+      if(course.length>0){
+        Ok(Json.obj("status" -> OK, "response" ->Json.toJson(course(0))))
+      }else{
+        NotFound(Json.obj("status" -> NOT_FOUND, "response" -> "No existe ningun curso con el ID solicitado"))
+      })
+  }
 }

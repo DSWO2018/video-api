@@ -20,4 +20,12 @@ class CourseServiceSpec extends AsyncFunSuite with Matchers with MockitoSugar {
       coursesRes => coursesRes shouldBe courses
     }
   }
+
+  test("return course"){
+    when(courseRepository.getCourse(1)).thenReturn(Future(courses))
+    val courseService = new CourseService(courseRepository)
+    courseService.getCourse(1).map{
+      courseRes => courseRes shouldBe courses
+    }
+  }
 }
