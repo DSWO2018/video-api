@@ -14,8 +14,8 @@ class SkillTreeService(skillTreeRepository: SkillTreeRepository)(implicit ec: Ex
   def update(id: Int, skillTree: SkillTree): Future[Int] = {
     val oldSt = skillTreeRepository.get(id)
     oldSt.flatMap { st =>
-      if (st.isDefined) {
-        skillTreeRepository.update(skillTree)
+      if (!st.isEmpty) {
+        skillTreeRepository.update(new SkillTree(Some(id), skillTree.title, skillTree.description, skillTree.credits))
       } else {
         Future(0)
       }
