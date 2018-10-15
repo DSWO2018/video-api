@@ -22,3 +22,7 @@ GET     /lessons/:lessonId          controllers.LessonController.getLesson(lesso
 
 # University
 GET     /universities               controllers.UniController.list
+
+# Skill tree
+POST    /skill/tree                 controllers.SkillTreeController.add
+PATCH   /skill/tree/:id             controllers.SkillTreeController.update(id: Int)
