@@ -9,20 +9,40 @@ import scala.concurrent.Future
 import scala.util.Success
 
 class SkillTreeServiceSpec extends AsyncFunSuite with Matchers with MockitoSugar {
-  val skRepository = mock[SkillTreeRepository]
-  val sk = new SkillTree(Option(1), "Back end", "Awesome backend", 300)
+  val stRepository = mock[SkillTreeRepository]
+  val st = new SkillTree(Option(1), "Back end", "Awesome backend", 300)
 
   test("return a skill tree when we push a new skill tree") {
-    when(skRepository.add(any()))
-      .thenReturn(Future(Success(sk)))
+    when(stRepository.add(any()))
+      .thenReturn(Future(Success(st)))
 
-    val skService = new SkillTreeService(skRepository)
+    val stService = new SkillTreeService(stRepository)
 
-    skService.add(new SkillTree(Option(1), "Back end", "Awesome backend", 300)).map { s =>
+    stService.add(new SkillTree(Option(1), "Back end", "Awesome backend", 300)).map { s =>
       s.get.id shouldBe Some(1)
       s.get.title shouldBe "Back end"
       s.get.description shouldBe "Awesome backend"
       s.get.credits shouldBe 300
+    }
+  }
+
+  test("update skill tree") {
+    when(stRepository.get(1))
+      .thenReturn(Future(Some(st)))
+
+    when(stRepository.get(0))
+      .thenReturn(Future(None))
+
+    when(stRepository.update(any()))
+      .thenReturn(Future(1))
+
+    val stService = new SkillTreeService(stRepository)
+
+    stService.update(1, st).map {st =>
+      st shouldBe 1
+    }
+    stService.update(0, st).map {st =>
+      st shouldBe 0
     }
   }
 }
