@@ -12,5 +12,9 @@ POST    /user                       controllers.UserController.addUser
 PATCH   /user/:id/description       controllers.UserController.updateDescription(id: Integer)
 PATCH   /user/:id/password          controllers.UserController.updatePassword(id: Integer)
 
+#Course routes
+GET     /courses                    controllers.CourseController.getCourses()
+GET     /courses/:courseId          controllers.CourseController.getCourse(courseId: Int)
+
 # University
 GET     /universities               controllers.UniController.list

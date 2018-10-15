@@ -17,4 +17,5 @@ object Course {
 }
 trait CourseRepository {
   def getCourses(): Future[Seq[Course]]
+  def getCourse(courseid: Int): Future[Seq[Course]]
 }
