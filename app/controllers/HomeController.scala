@@ -26,14 +26,14 @@ class HomeController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
    * a path of `/`.
    */
   def index = Action {
-      Ok(Json.obj("status" ->"OK", "message" -> "Hello world."))
+      Ok(Json.obj("status" ->"OK", "response" -> "Hello world."))
   }
 
   def who = Action { request =>
     request.session.get("user").map { user =>
-      Ok(Json.obj("status" ->OK, "message" -> user))
+      Ok(Json.obj("status" ->OK, "response" -> user))
     }.getOrElse {
-      Unauthorized(Json.obj("status" ->OK, "message" -> "Unauthorized"))
+      Unauthorized(Json.obj("status" ->UNAUTHORIZED, "response" -> "Unauthorized"))
     }
   }
 
@@ -41,15 +41,15 @@ class HomeController @Inject()(userRepo: SlickUserRepository, cc: ControllerComp
     val placeResult = request.body.validate[User]
     placeResult.fold(
       errors => {
-        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "message" -> JsError.toJson(errors))))
+        Future(BadRequest(Json.obj("status" ->BAD_REQUEST, "response" -> JsError.toJson(errors))))
       },
       user => {
         service.isAuthenticated(user.email, user.password).map { auth =>
           if(auth) {
-            Ok(Json.obj("status" ->OK, "message" -> "Authorized")).withSession(
+            Ok(Json.obj("status" ->OK, "response" -> "Authorized")).withSession(
               "user" -> user.email)
           } else {
-            Unauthorized(Json.obj("status" ->UNAUTHORIZED, "message" -> "Bad login"))
+            Unauthorized(Json.obj("status" ->UNAUTHORIZED, "response" -> "Bad login"))
           }
         }
       }
